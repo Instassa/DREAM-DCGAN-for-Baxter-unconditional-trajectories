@@ -1,5 +1,6 @@
 # DREAM-DCGAN-for-Baxter-unconditional-trajectories
-22.12.2017 DREAM report: A module that would take Baxter trajectories produced by quality diversity (QD) search and generate new trajectories based on these.
+**22.12.2017 DREAM report:** This module would take Baxter trajectories produced by quality diversity (QD) search and generate new trajectories based on these.
+We are currently working on extending this code to producing novel trajectories, conditioned on the landing point of the object.
 
 
 ## Short Summary:
@@ -9,16 +10,23 @@ The `main.py` function takes the name of the data folder, training stage (i.e. t
 
 ## Prerequisites:
 * Python 3.3+
-* Tensorflow 0.12.1 (GPU configuration)
-* SciPy
-* pillow
+* [Tensorflow 0.12.1 (GPU configuration)](https://github.com/tensorflow/tensorflow/tree/r0.12)
+* [SciPy](https://www.scipy.org/install.html)
+* [pillow](https://pillow.readthedocs.io/en/4.0.x/)
 * numpy
 * math
 * os
 
 
 ## Usage:
-After downloading this repository, please add the [archive_3600_trj.dat](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170703-01/) and [unzipped motion folder](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170706-01/) in `DREAM-DCGAN-for-Baxter-unconditional-trajectories/data` folder.
+After downloading this repository, please add the [archive_3600_trj.dat](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170703-01/) and [unzipped motion folder](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170706-01/) in `DREAM-DCGAN-for-Baxter-unconditional-trajectories/data` folder:
+
+    DREAM-DCGAN-for-Baxter-unconditional-trajectories
+    ├── data
+        ├── archive_3600_trj.dat
+        └── motion
+    └── ...
+    
 Then run the following comands:
 
     cd ./DREAM-DCGAN-for-Baxter-unconditional-trajectories
