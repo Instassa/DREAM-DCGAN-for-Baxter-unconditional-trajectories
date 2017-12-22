@@ -1,6 +1,4 @@
-"""
-Some codes from https://github.com/Newmu/dcgan_code
-"""
+
 from __future__ import division
 import math
 import json
@@ -13,6 +11,8 @@ from six.moves import xrange
 import time
 import os
 
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
 
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
@@ -193,6 +193,9 @@ def visualize(sess, dcgan, config, option):
         z_sample = np.random.uniform(-1, 1, size=(config.batch_size, dcgan.z_dim))
         samples = sess.run(dcgan.sampler, feed_dict={dcgan.z: z_sample})
         save_npys(samples, './samples/experiment/test_set_{}/test_samples_{:04d}.npy'.format(now, i))
+        plot_3D(samples, config.batch_size, 6, './samples/experiment/test_set_{}/test_samples_{:04d}.png'.format(now, i))
+        
+    
   elif option == 1:
     values = np.arange(0, 1, 1./config.batch_size)
     for idx in xrange(100):
@@ -259,3 +262,39 @@ def visualize(sess, dcgan, config, option):
     new_image_set = [merge(np.array([images[idx] for images in image_set]), [10, 10]) \
         for idx in range(64) + range(63, -1, -1)]
     make_gif(new_image_set, './samples/test_gif_merged.gif', duration=8)
+
+def plot_3D(minibatch, Lrange, gap, name):
+    def nice_plot(traj_data, Lrange, k):
+        cmap2 = plt.cm.get_cmap('viridis')
+        u = 'mo'
+        dim = np.shape(traj_data)[1]
+        j = 0
+        
+        for i in range(dim):
+            if all(traj_data[:, i, 0] == np.zeros(np.shape(traj_data[:, i, 0]))):
+                j += 1
+        traj_data = traj_data[:, j:dim, :]; dim2 = np.shape(traj_data)[1]
+        if np.shape(traj_data)[0] == 3:
+            ax.plot(traj_data[-3,:,0], traj_data[-2,:,0], traj_data[-1,:,0], color = cmap2((1/(Lrange))*(k+1)), linewidth=2.0)
+            ax.plot(traj_data[-3,(dim2-1):dim2,0], traj_data[-2,(dim2-1):dim2,0], traj_data[-1,(dim2-1):dim2,0], u)
+        else:
+            ax.plot(traj_data[-1,:,0], traj_data[-3,:,0], traj_data[-2,:,0], color = cmap2((1/(Lrange))*(k+1)), linewidth=2.0)
+            ax.plot(traj_data[-1,(dim2-1):dim2,0], traj_data[-3,(dim2-1):dim2,0], traj_data[-2,(dim2-1):dim2,0], u)
+        
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.set_title('DCGAN-generated trajectories, {:01d} out of {:01d}, test mode '.format(int(Lrange/gap), Lrange), fontweight='bold')
+
+
+    traj_data_full = minibatch*11.904
+    for j in range(0, Lrange, gap):
+        nice_plot(traj_data_full[j, -4:-1, :, :], Lrange, j)
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Z')
+    ax.set_zlabel('Y')
+    ax.legend(loc = (0.7, 0.7))
+    fig.savefig(name)
+#    plt.show()
+#        fig.savefig('./DCGAN_results/baxter_arm_TVMaster1_Symmetric_interp_99th_exoticaFK.png')
+     
