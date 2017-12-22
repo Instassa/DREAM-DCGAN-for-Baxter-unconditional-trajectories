@@ -16,8 +16,6 @@ from scipy import interpolate
 
 mpl.rcParams['legend.fontsize'] = 10
 
-#os.chdir('/home/marija')
-
 with open('./data/archive_3600_trj.dat','r') as f:
     myarr = [L.strip().split(' ') for L in f]
 
@@ -35,11 +33,13 @@ obj_l = np.array(obj, dtype = int)
 arm_l_max = arm_l.max(); print('Tn max: ', arm_l_max)
 obj_l_max = obj_l.max(); print('To max: ', obj_l_max)
 
-for i in range(NumberT): # just ARM MinMax:
+for i in range(NumberT):
     Tn_m = (3*np.int(traj[1])+4+1)
     MinMax[i, :] = [np.min(traj[4:Tn_m]), np.max(traj[4:Tn_m])]
 
-LEN = arm_l_max
+LEN = arm_l_max 
+LEN2 = 576
+
 
 def converter(List):
     length = len(List)
@@ -54,11 +54,8 @@ def converter(List):
     new_List = new_List.reshape(26, 1)
     return(new_List)        
 
-
 MAX = 11.904; 
 
-exceptions = []
-Emax = []; k=0
 for i in range(0,NumberT):
     fu  = './data/motion/{:0d}.dat'.format(i)
     with open(fu,'r') as f:
@@ -76,21 +73,16 @@ for i in range(0,NumberT):
 
     length = np.shape(full_arm_traj)[1]; interp_traj = np.zeros((np.shape(full_arm_traj)[0], arm_l_max))
     real_len = np.linspace(0, arm_l_max, length); intended_len = np.linspace(0, arm_l_max, arm_l_max)    
+
     for k in range(np.shape(full_arm_traj)[0]):
         interp_traj[k, :] = interpolate.pchip_interpolate(real_len, full_arm_traj[k, :], intended_len);
-    interp_traj = interp_traj.reshape((np.shape(interp_traj)[0], np.shape(interp_traj)[1], 1))
-    try:
-        RI = interp_traj[:, 0:(LEN):10, :]/MAX
+    RI = interp_traj.reshape((np.shape(interp_traj)[0], np.shape(interp_traj)[1], 1))/MAX; #[:, None]
     
-        newpath = './data/formated_unconditional_trajectories/'
-        if not os.path.exists(newpath):
-            os.makedirs(newpath)
+    RI = RI[:, 0:(LEN):10, :]
+    
+    newpath = './data/formated_unconditional_trajectories/'
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
             
-        f = './data/formated_unconditional_trajectories/npy_train_{:05d}.npy'.format(i)
-        np.save(f, RI)
-    except:
-        k +=1
-        
-
-
-
+    f = './data/formated_unconditional_trajectories/npy_train_{:05d}.npy'.format(i)
+    np.save(f, RI)
