@@ -3,7 +3,7 @@
 
 
 ## Short Summary:
-The `format_data.py` function takes [archive_3600_trj.dat](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170703-01/) and [motion folder](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170706-01/) as an input and outputs a data folder in a format digestable by DCGAN function.   
+The `format_data_unconditional.py` function takes [archive_3600_trj.dat](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170703-01/) and [motion folder](https://dream.isir.upmc.fr/databases/ball_throwing_baxter/20170706-01/) as an input and outputs a data folder in a format digestable by DCGAN function.   
 The `main.py` function takes the name of the data folder, training stage (i.e. train/test), plus (optional) specific information, e.g. input/output height/width, a preferred number of training epochs and so on. This function produces the batches of samples (64 in each) that can be then used to control Baxter in Gazebo (or later at some point a real Baxter robot)
 
 
