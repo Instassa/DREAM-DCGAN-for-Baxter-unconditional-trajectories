@@ -1,5 +1,6 @@
 # DREAM-DCGAN-for-Baxter-unconditional-trajectories
 **22.12.2017 DREAM report:** This module would take Baxter trajectories produced by quality diversity (QD) search and generate new trajectories based on these.
+
 We are currently working on extending this code to producing novel trajectories, conditioned on the landing point of the object.
 
 
